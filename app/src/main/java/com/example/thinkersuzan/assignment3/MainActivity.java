@@ -1,16 +1,19 @@
 package com.example.thinkersuzan.assignment3;
 
-;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.media.MediaPlayer;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
@@ -18,6 +21,21 @@ import android.widget.GridLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
     long timeSwap = 0L;
     long finalTime = 0L;
     MediaPlayer mediaPlayer;
+    String result;
+    List<String> strings1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
 
             initialize();
             startTime();
+
+
         } catch (Exception e) {
 
         }
@@ -236,23 +258,29 @@ public class MainActivity extends AppCompatActivity {
             boolean isAnsCorrect = sudoku.check(getAns());
             String messageStr = "";
             if (isAnsCorrect) {
+
                 this.stop();
+
+
                 mediaPlayer = MediaPlayer.create(this, R.raw.winner);//
                 mediaPlayer.start();
+                WriteBtn();
 
                 AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-
-                alertDialog.setTitle("The Timer" + timeLabel.getText());
+                alertDialog.setMessage(readFromFile()+"\n"+"1-"+strings1.get(0)+"\n"+"2-"+strings1.get(1)
+                        +"\n"+"3-"+strings1.get(2)+"\n"+"4-"+strings1.get(3)+"\n"+"5-"+strings1.get(4));
+                alertDialog.setTitle("Th Timer" + timeLabel.getText());
                 alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         mediaPlayer.stop();
                         grid = Sudoku.GRID_9X9;
                         int[][] puzzle = sudoku.getNewPuzzle(grid, gameMode);
                         createBoard(puzzle);
-                        startTime = SystemClock.uptimeMillis();
-                        myHandler.postDelayed(updateTimerMethod, 0);
-
-
+                        startTime = 0L;
+                        timeInMillies = 0L;
+                        timeSwap = 0L;
+                        finalTime = 0L;
+                        startTime();
                     }
                 });
                 alertDialog.setIcon(R.drawable.iconwinner);
@@ -275,6 +303,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void stop() {
+
         timeSwap += timeInMillies;
         myHandler.removeCallbacks(updateTimerMethod);
     }
@@ -283,6 +312,10 @@ public class MainActivity extends AppCompatActivity {
         grid = Sudoku.GRID_9X9;
         int[][] puzzle = sudoku.getNewPuzzle(grid, gameMode);
         createBoard(puzzle);
+        startTime = 0L;
+        timeInMillies = 0L;
+        timeSwap = 0L;
+        finalTime = 0L;
         startTime();
 
     }
@@ -308,4 +341,68 @@ public class MainActivity extends AppCompatActivity {
 
         };
     }
+
+    private String readFromFile() {
+        StringBuffer stringBuffer = new StringBuffer();
+        String message = "";
+
+        try {
+            BufferedReader inputReader = new BufferedReader(new InputStreamReader(
+                    openFileInput("config.txt")));
+
+            String inputString;
+            ArrayList<String> strings = new ArrayList<>();
+            while ((inputString = inputReader.readLine()) != null) {
+                stringBuffer.append(inputString + "\n");
+                strings.add(inputString);
+            }
+Collections.sort(strings);
+         strings1 = strings.subList(0, 5);
+            String min=strings1.get(0);
+                if(min.compareTo(result)== -1){
+                    message="It doesn`t from any top five scores";
+
+                }else {
+                   strings1.indexOf(result) ;
+                    message="the score"+strings1.indexOf(result);
+
+                }
+
+
+            Toast.makeText(getBaseContext(), strings1.toString(),
+                    Toast.LENGTH_LONG).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return message;
+    }
+
+    public void WriteBtn() {
+        try {
+
+            FileOutputStream fos = openFileOutput("config.txt",
+                    Context.MODE_APPEND | Context.MODE_WORLD_READABLE);
+
+
+            fos.write(timeLabel.getText().toString().getBytes());
+            fos.write("\n".getBytes());
+            fos.close();
+
+            String storageState = Environment.getExternalStorageState();
+            if (storageState.equals(Environment.MEDIA_MOUNTED)) {
+                File file = new File(getExternalFilesDir(null),
+                        "config.txt");
+                String dir = getFilesDir().getAbsolutePath();
+
+                FileOutputStream fos2 = new FileOutputStream(file);
+                fos2.write(timeLabel.getText().toString().getBytes());
+                result=timeLabel.getText().toString();
+                fos.write("\n".getBytes());
+                fos2.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
