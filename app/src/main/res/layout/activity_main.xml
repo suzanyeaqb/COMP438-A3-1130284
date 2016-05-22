@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/images"
+    tools:context="com.example.thinkersuzan.assignment3.MainActivity"
+    android:id="@+id/board">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout2"
+        android:layout_below="@+id/linearLayout"
+        android:layout_alignStart="@+id/linearLayout">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="37dp"
+            android:text="Start"
+            android:id="@+id/button3"
+            android:onClick="start" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="37dp"
+
+            android:text="Pause"
+            android:id="@+id/button2"
+            android:onClick="Pause" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="37dp"
+            android:text="Exit"
+            android:id="@+id/exit"
+            android:onClick="exit" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout"
+        android:layout_below="@+id/imageView"
+        android:layout_alignParentEnd="true">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="37dp"
+            android:text="New"
+            android:id="@+id/button4"
+            android:onClick="newGame" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:text="Solver"
+            android:layout_height="37dp"
+
+            android:onClick="Solver"
+            android:id="@+id/button"
+            android:layout_alignParentTop="true"
+            android:layout_alignEnd="@+id/tableGrid" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="37dp"
+            android:text="Check"
+            android:onClick="Check"
+            android:id="@+id/imageButton"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
+
+    </LinearLayout>
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tableGrid"
+        android:inputType="number"
+        android:focusableInTouchMode="false"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/linearLayout2">
+
+    </GridLayout>
+
+    <TextView
+        android:layout_width="83dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Small Text"
+        android:id="@+id/timeLabel"
+        android:textColor="#ffffff"
+        android:textSize="17dp"
+        android:layout_below="@+id/imageView"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/linearLayout2" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:src="@drawable/sudoku"
+        android:layout_row="2"
+        android:layout_column="8"
+        android:maxWidth="50dp"
+        android:maxHeight="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+</RelativeLayout>
